@@ -1,120 +1,192 @@
-# CZD PORT SCANNER
+# CZD Port Scanner
 
-A modular, multithreaded Python 3 port scanner built by David Osisek. It supports TCP Connect, TCP SYN (stealth), and UDP scans using raw sockets and Scapy. Designed for internal reconnaissance, firewall validation, and security audits.
+![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+![Security](https://img.shields.io/badge/Security-Network%20Tools-red?style=for-the-badge)
+![Maintained](https://img.shields.io/badge/Maintained-Yes-brightgreen?style=for-the-badge)
 
-- Features
-	•	TCP Connect Scan (--scan tcp)
-	•	TCP SYN Stealth Scan (--scan syn)
-	•	UDP Scan (--scan udp)
-	•	Custom Port Ranges (--ports 22,80,443,8000-8010)
-	•	Multithreaded for performance
-	•	Logs results to port_scanner.log
+A modular, multithreaded Python port scanner supporting multiple scan types. Built for internal reconnaissance, firewall validation, and security audits.
 
+## 🎯 Features
 
+- ✅ **TCP Connect Scan** - Standard three-way handshake
+- ✅ **TCP SYN Stealth Scan** - Half-open scanning using raw sockets
+- ✅ **UDP Scan** - UDP port enumeration
+- ✅ **Custom Port Ranges** - Flexible port specification (e.g., 22,80,443,8000-8010)
+- ✅ **Multithreaded** - Fast parallel scanning
+- ✅ **Automatic Logging** - Results saved to port_scanner.log
+- ✅ **Modular Design** - Easy to extend and customize
 
-## - Installation & Setup
+## 🚀 Quick Start
 
+### Prerequisites
 
-## 1. Install Python 3
+- Python 3.8 or higher
+- Root/Administrator privileges (for SYN and UDP scans)
+- Scapy library for raw packet manipulation
 
-Make sure Python 3 is installed:
+### Installation
 
-python3 --version
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/CamoRageaholic1/CZD_Port_Scanner.git
+   cd CZD_Port_Scanner
+   ```
 
-If needed:
+2. **Install dependencies**
+   ```bash
+   pip3 install -r requirements.txt
+   ```
 
-sudo apt update && sudo apt install python3 python3-pip -y
+### Basic Usage
 
-
-## 2. Install Dependencies
-
-Install Scapy for raw packet manipulation:
-
-pip3 install scapy
-
-## - Permissions
-
-SYN and UDP scanning use raw sockets and require root privileges. Always run this tool with sudo:
-
-sudo python3 CZD_Port_Scanner.py ...
-
-
-## - File Setup
-
-Clone or download this repository and ensure the main script is saved as:
-
-CZD_Port_Scanner.py
-
-## - Usage
-
-Basic Syntax
-
-sudo python3 CZD_Port_Scanner.py --target <ip_or_hostname> --ports <port_list> --scan <tcp|syn|udp>
-
-
-
-Examples
-
-TCP Connect Scan
-
+```bash
+# TCP Connect Scan
 sudo python3 CZD_Port_Scanner.py --target 192.168.1.1 --ports 22,80,443 --scan tcp
 
-SYN Stealth Scan
-
+# SYN Stealth Scan (requires root)
 sudo python3 CZD_Port_Scanner.py --target 192.168.1.1 --ports 1-1024 --scan syn
 
-UDP Scan
-
+# UDP Scan (requires root)
 sudo python3 CZD_Port_Scanner.py --target 192.168.1.1 --ports 53,123,161,500 --scan udp
+```
 
+## 📖 Usage Guide
 
+### Command-Line Options
 
+```bash
+sudo python3 CZD_Port_Scanner.py --target <ip_or_hostname> --ports <port_list> --scan <tcp|syn|udp>
+```
 
-## Output 💾 
+**Parameters:**
+- `--target` - Target IP address or hostname
+- `--ports` - Ports to scan (comma-separated or ranges)
+  - Examples: `22,80,443` or `1-1024` or `22,80,8000-8010`
+- `--scan` - Scan type: `tcp`, `syn`, or `udp`
 
-Scan results are written to:
+### Scan Types
 
-port_scanner.log
+#### TCP Connect Scan
+Standard TCP connection - completes three-way handshake
+- **Pros:** No special privileges required, most reliable
+- **Cons:** Easily detected, logged by target systems
 
-Each entry includes timestamped status information (OPEN, FILTERED, etc.).
+```bash
+python3 CZD_Port_Scanner.py --target example.com --ports 80,443 --scan tcp
+```
 
+#### SYN Stealth Scan
+Half-open scan - sends SYN packet without completing handshake
+- **Pros:** Stealthier, less likely to be logged
+- **Cons:** Requires root privileges, uses raw sockets
 
-### Legal Disclaimer ### 
+```bash
+sudo python3 CZD_Port_Scanner.py --target 192.168.1.1 --ports 1-1000 --scan syn
+```
 
-This tool is for educational and authorized use only. Unauthorized port scanning may violate legal, ethical, or organizational policies. Use responsibly.
+#### UDP Scan
+Scans UDP ports for services
+- **Pros:** Finds UDP-only services (DNS, SNMP, etc.)
+- **Cons:** Slower, less reliable, requires root privileges
 
+```bash
+sudo python3 CZD_Port_Scanner.py --target 192.168.1.1 --ports 53,161,500 --scan udp
+```
 
+## 📊 Output
 
-Roadmap
-	•	Export scan results to JSON or CSV
-	•	Add service banner grabbing
-	•	CIDR/subnet scanning support
-	•	Nmap XML compatibility
-	•	OSINT integration support
+All scan results are automatically logged to `port_scanner.log` with timestamps:
 
+```
+[2025-11-26 10:30:45] Target: 192.168.1.1
+[2025-11-26 10:30:45] Port 22/tcp - OPEN
+[2025-11-26 10:30:45] Port 80/tcp - OPEN
+[2025-11-26 10:30:45] Port 443/tcp - OPEN
+```
 
+## ⚠️ Permissions & Requirements
 
-Author
-David Osisek
-MIT IT SECURITY, BS Software Dev and Analysis
+### Root Access Required For:
+- **SYN scans** - Raw socket creation
+- **UDP scans** - Raw socket creation
 
-CZD_Port_Scanner.py is part of a cybersecurity utility suite developed as a showcase of hands-on expertise in Python and network enumeration.
+### Running with Sudo
 
+```bash
+# Always use sudo for SYN and UDP scans
+sudo python3 CZD_Port_Scanner.py --target 192.168.1.1 --ports 1-1024 --scan syn
+```
 
+## 🔒 Legal & Ethical Use
 
-📁 Repo Structure
+**⚠️ IMPORTANT DISCLAIMER:**
 
-/CZD_Port_Scanner
+This tool is intended for:
+- ✅ Authorized security testing
+- ✅ Internal network audits
+- ✅ Educational purposes
+- ✅ Personal lab environments
 
-├── CZD_Port_Scanner.py
+**Unauthorized port scanning may violate:**
+- Local, state, or federal laws
+- Organizational security policies
+- Terms of service agreements
+- Computer fraud and abuse laws
 
-├── README.md
+**Always obtain explicit written permission before scanning systems you do not own.**
 
-├── port_scanner.log  (auto-generated after scan)
+## 📁 Project Structure
 
-└── /docs              (optional for future documentation)
+```
+CZD_Port_Scanner/
+├── CZD_Port_Scanner.py     # Main scanner script
+├── README.md               # This file
+├── LICENSE                 # MIT License
+├── requirements.txt        # Python dependencies
+├── .gitignore             # Git ignore rules
+└── port_scanner.log       # Auto-generated scan results
+```
 
+## 🛣️ Roadmap
 
+Future enhancements planned:
 
-Questions / Contributions
-Feel free to open an issue or submit a pull request for enhancements or fixes.
+- [ ] Export results to JSON/CSV formats
+- [ ] Service banner grabbing
+- [ ] CIDR/subnet scanning support
+- [ ] Nmap XML output compatibility
+- [ ] OSINT integration
+- [ ] Web-based dashboard
+- [ ] Scan scheduling and automation
+
+## 🤝 Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/enhancement`)
+3. Commit changes (`git commit -m 'Add new feature'`)
+4. Push to branch (`git push origin feature/enhancement`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📫 Support
+
+- 🐛 **Bug Reports:** Open an issue on GitHub
+- 💡 **Feature Requests:** Open an issue with the "enhancement" label
+- 📧 **Contact:** For other inquiries, reach out via GitHub
+
+## 🙏 Acknowledgments
+
+Built as part of a cybersecurity utility suite showcasing hands-on Python and network enumeration expertise.
+
+---
+
+**Author:** David Osisek (CamoZeroDay)  
+**Education:** MIT in IT Security, BS Software Development and Analysis
+
+**Made with ❤️ for the cybersecurity community**
